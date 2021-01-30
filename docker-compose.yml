@@ -2,21 +2,28 @@ version: "3.7"
 
 services:
   mysql-service:
+    container_name: spring-boot-mysql
     image: mysql:5.7
+    volumes:
+      - ./dbdata:/var/lib/mysql
     networks:
       - spring-boot-mysql-network
+    ports:
+      - '3301:3306'
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_HOST=root
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=javaapp
-      
   java-service:
-    build:
+    build: 
       context: ./
       dockerfile: Dockerfile
     ports:
       - "9091:9091"
+    volumes:
+      - /data/docker-compose-mysql:/spring-boot_app
+    container_name: pythonapp_web
     networks:
       - spring-boot-mysql-network
     depends_on:
